@@ -5,12 +5,12 @@ var router = express.Router();
 // .ADO.Net is a wrapper over raw SQL server interface
 const mongoose = require("mongoose");
 
-const ToDos = require("../ToDos");
+const HWs = require("../HWs");
 
 // edited to include my non-admin, user level account and PW on mongo atlas
 // and also to include the name of the mongo DB that the collection
 const dbURI =
- "your mongo connection string here";
+ "mongodb+srv://ServerUser:Ruby1997@trupticluster.z4ylf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
 // Make Mongoose use `findOneAndUpdate()`. Note that this option is `true`
 // by default, you need to set it to false.
@@ -37,71 +37,71 @@ router.get('/', function(req, res) {
   res.sendFile('index.html');
 });
 
-/* GET all ToDos */
-router.get('/ToDos', function(req, res) {
+/* GET all HWs */
+router.get('/HWs', function(req, res) {
   // find {  takes values, but leaving it blank gets all}
-  ToDos.find({}, (err, AllToDos) => {
+  HWs.find({}, (err, AllHWs) => {
     if (err) {
       console.log(err);
       res.status(500).send(err);
     }
-    res.status(200).json(AllToDos);
+    res.status(200).json(AllHWs);
   });
 });
 
 
 
 
-/* post a new ToDo and push to Mongo */
-router.post('/NewToDo', function(req, res) {
+/* post a new HW and push to Mongo */
+router.post('/NewHW', function(req, res) {
 
-    let oneNewToDo = new ToDos(req.body);  // call constuctor in ToDos code that makes a new mongo ToDo object
+    let oneNewHW = new HWs(req.body);  // call constuctor in HWs code that makes a new mongo HW object
     console.log(req.body);
-    oneNewToDo.save((err, todo) => {
+    oneNewHW.save((err, hw) => {
       if (err) {
         res.status(500).send(err);
       }
       else {
-      console.log(todo);
-      res.status(201).json(todo);
+      console.log(hw);
+      res.status(201).json(hw);
       }
     });
 });
 
 
-router.delete('/DeleteToDo/:id', function (req, res) {
-  ToDos.deleteOne({ _id: req.params.id }, (err, note) => { 
+router.delete('/DeleteHW/:id', function (req, res) {
+  HWs.deleteOne({ _id: req.params.id }, (err, note) => { 
     if (err) {
       res.status(404).send(err);
     }
-    res.status(200).json({ message: "ToDo successfully deleted" });
+    res.status(200).json({ message: "HWAssignment successfully deleted" });
   });
 });
 
 
-router.put('/UpdateToDo/:id', function (req, res) {
-  ToDos.findOneAndUpdate(
+router.put('/UpdateHW/:id', function (req, res) {
+  HWs.findOneAndUpdate(
     { _id: req.params.id },
-    { title: req.body.title, detail: req.body.detail, priority: req.body.priority,   completed: req.body.completed },
+    { className: req.body.className, assignmentName: req.body.assignmentName, submitted: req.body.submitted,   score: req.body.score },
    { new: true },
-    (err, todo) => {
+    (err, hw) => {
       if (err) {
         res.status(500).send(err);
     }
-    res.status(200).json(todo);
+    res.status(200).json(hw);
     })
   });
 
 
-  /* GET one ToDos */
-router.get('/FindToDo/:id', function(req, res) {
+  /* GET one HWs */
+router.get('/FindHW/:id', function(req, res) {
   console.log(req.params.id );
-  ToDos.find({ _id: req.params.id }, (err, oneToDo) => {
+  HWs.find({ _id: req.params.id }, (err, oneHW) => {
     if (err) {
       console.log(err);
       res.status(500).send(err);
     }
-    res.status(200).json(oneToDo);
+    res.status(200).json(oneHW);
   });
 });
 

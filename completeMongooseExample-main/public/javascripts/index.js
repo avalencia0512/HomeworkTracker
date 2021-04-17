@@ -7,7 +7,7 @@ function HW(pClassName, pAssignmentName, pSubmitted, pScore) {
   }
   var ClientNotes = [];  // our local copy of the cloud data
 
-
+// POST
 document.addEventListener("DOMContentLoaded", function (event) {
 
     document.getElementById("submit").addEventListener("click", function () {

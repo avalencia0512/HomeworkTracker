@@ -1,29 +1,30 @@
 
-function ToDo(pTitle, pDetail, pPriority) {
-    this.title= pTitle;
-    this.detail = pDetail;
-    this.priority = pPriority;
-    this.completed = false;
+function HW(pClassName, pAssignmentName, pSubmitted, pScore) {
+    this.className = pClassName;
+    this.assignmentName = pAssignmentName;
+    this.submitted = pSubmitted;
+    this.score = pScore;
   }
   var ClientNotes = [];  // our local copy of the cloud data
 
-
+// POST
 document.addEventListener("DOMContentLoaded", function (event) {
 
     document.getElementById("submit").addEventListener("click", function () {
-        var tTitle = document.getElementById("title").value;
-        var tDetail = document.getElementById("detail").value;
-        var tPriority = document.getElementById("priority").value;
-        var oneToDo = new ToDo(tTitle, tDetail, tPriority);
+        var tClassName = document.getElementById("className").value;
+        var tAssignmentName = document.getElementById("assignmentName").value;
+        var tSubmitted = document.getElementById("submitted").value;
+        var tScore = document.getElementById("score").value;
+        var oneHW = new HW(tClassName, tAssignmentName, tSubmitted, tScore);
 
         $.ajax({
-            url: '/NewToDo' ,
+            url: '/NewHW' ,
             method: 'POST',
             dataType: 'json',
             contentType: 'application/json',
-            data: JSON.stringify(oneToDo),
+            data: JSON.stringify(oneHW),
             success: function (result) {
-                console.log("added new note")
+                console.log("added new HWAssignment")
             }
 
         });
@@ -37,10 +38,10 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     document.getElementById("delete").addEventListener("click", function () {
         
-        var whichToDo = document.getElementById('deleteTitle').value;
+        var whichHW = document.getElementById('deleteAssignmentName').value;
         var idToDelete = "";
         for(i=0; i< ClientNotes.length; i++){
-            if(ClientNotes[i].title === whichToDo) {
+            if(ClientNotes[i].title === whichHW) {
                 idToDelete = ClientNotes[i]._id;
            }
         }
@@ -48,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
         if(idToDelete != "")
         {
                      $.ajax({  
-                    url: 'DeleteToDo/'+ idToDelete,
+                    url: 'DeleteHW/'+ idToDelete,
                     type: 'DELETE',  
                     contentType: 'application/json',  
                     success: function (response) {  
@@ -60,24 +61,24 @@ document.addEventListener("DOMContentLoaded", function (event) {
                 });  
         }
         else {
-            console.log("no matching Subject");
+            console.log("no matching Assignment");
         } 
     });
 
 
 
     document.getElementById("msubmit").addEventListener("click", function () {
-        var tTitle = document.getElementById("mtitle").value;
-        var tDetail = document.getElementById("mdetail").value;
-        var tPriority = document.getElementById("mpriority").value;
-        var oneToDo = new ToDo(tTitle, tDetail, tPriority);
-        oneToDo.completed =  document.getElementById("mcompleted").value;
+        var tClassName = document.getElementById("className").value;
+        var tAssignmentName = document.getElementById("assignmentName").value;
+        var tSubmitted = document.getElementById("submitted").value;
+        var tScore = document.getElementById("score").value;
+        var oneHW = new HW(tClassName, tAssignmentName, tSubmitted, tScore);
         
             $.ajax({
-                url: 'UpdateToDo/'+idToFind,
+                url: 'UpdateHW/'+idToFind,
                 type: 'PUT',
                 contentType: 'application/json',
-                data: JSON.stringify(oneToDo),
+                data: JSON.stringify(oneHW),
                     success: function (response) {  
                         console.log(response);  
                     },  
@@ -94,23 +95,21 @@ document.addEventListener("DOMContentLoaded", function (event) {
     var idToFind = ""; // using the same value from the find operation for the modify
     // find one to modify
     document.getElementById("find").addEventListener("click", function () {
-        var tTitle = document.getElementById("modTitle").value;
+        var tAssignmentName = document.getElementById("modAssignmentName").value;
          idToFind = "";
         for(i=0; i< ClientNotes.length; i++){
-            if(ClientNotes[i].title === tTitle) {
+            if(ClientNotes[i].assignmentName === assignmentName) {
                 idToFind = ClientNotes[i]._id;
            }
         }
         console.log(idToFind);
  
-        $.get("/FindToDo/"+ idToFind, function(data, status){ 
+        $.get("/FindHW/"+ idToFind, function(data, status){ 
             console.log(data[0].title);
-            document.getElementById("mtitle").value = data[0].title;
-            document.getElementById("mdetail").value= data[0].detail;
-            document.getElementById("mpriority").value = data[0].priority;
-            document.getElementById("mcompleted").value = data[0].completed;
-           
-
+            document.getElementById("className").value = data[0].className;
+            document.getElementById("assignmentName").value= data[0].assignmentName;
+            document.getElementById("submitted").value = data[0].submitted;
+            document.getElementById("score").value = data[0].score;
         });
     });
 
@@ -121,34 +120,51 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
 
 function updateList() {
+    console.log("Into updateList()");
 var ul = document.getElementById('listUl');
 ul.innerHTML = "";  // clears existing list so we don't duplicate old ones
 
 //var ul = document.createElement('ul')
 
-$.get("/ToDos", function(data, status){  // AJAX get
+$.get("/HWs", function(data, status){  // AJAX get
     ClientNotes = data;  // put the returned server json data into our local array
 
     // sort array by one property
     ClientNotes.sort(compare);  // see compare method below
-    console.log(data);
+    console.log("Into updateList - Get /HWs: ", data);
     //listDiv.appendChild(ul);
-    ClientNotes.forEach(ProcessOneToDo); // build one li for each item in array
-    function ProcessOneToDo(item, index) {
+    ClientNotes.forEach(ProcessOneHW); // build one li for each item in array
+    function ProcessOneHW(item, index) {
         var li = document.createElement('li');
         ul.appendChild(li);
 
-        li.innerHTML=li.innerHTML + index + ": " + " Priority: " + item.priority + "  " + item.title + ":  " + item.detail + " Done? "+ item.completed;
+        li.innerHTML=li.innerHTML + index + ": " + " ClassName: " + item.className + " AssignmentName: " + item.assignmentName + " Submitted: " + item.submitted + " Score:  " + item.score;
     }
 });
 }
 
 function compare(a,b) {
-    if (a.completed == false && b.completed== true) {
+    if (a.submitted == false && b.submitted== true) {
         return -1;
     }
-    if (a.completed == false && b.completed== true) {
+    if (a.submitted == false && b.submitted== true) {
         return 1;
     }
     return 0;
 }
+
+$.get("/HWs", function(data, status){  // AJAX get
+    ClientNotes = data;  // put the returned server json data into our local array
+
+    // sort array by one property
+    ClientNotes.sort(compare);  // see compare method below
+    console.log("Into updateList - Get /HWs: ", data);
+    //listDiv.appendChild(ul);
+    ClientNotes.forEach(ProcessOneHW); // build one li for each item in array
+    function ProcessOneHW(item, index) {
+        var li = document.createElement('li');
+        ul.appendChild(li);
+
+        li.innerHTML=li.innerHTML + index + ": " + " ClassName: " + item.className + " AssignmentName: " + item.assignmentName + " Submitted: " + item.submitted + " Score:  " + item.score;
+    }
+});

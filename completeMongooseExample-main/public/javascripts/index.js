@@ -7,7 +7,6 @@ function HW(pClassName, pAssignmentName, pSubmitted, pScore) {
   }
   var ClientNotes = [];  // our local copy of the cloud data
 
-  
 // POST
 document.addEventListener("DOMContentLoaded", function (event) {
 
@@ -25,9 +24,10 @@ document.addEventListener("DOMContentLoaded", function (event) {
             contentType: 'application/json',
             data: JSON.stringify(oneHW),
             success: function (result) {
-                console.log("added new HWAssignment")
+                clearAddGridComponents();
+                showSuccessAddNotif();
+                updateList();
             }
-
         });
     });
 
@@ -35,8 +35,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
         updateList()
     });
   
-
-
     document.getElementById("delete").addEventListener("click", function () {
         
         var whichHW = document.getElementById('deleteAssignmentName').value;
@@ -66,8 +64,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
         } 
     });
 
-
-
     document.getElementById("msubmit").addEventListener("click", function () {
         var tClassName = document.getElementById("className").value;
         var tAssignmentName = document.getElementById("assignmentName").value;
@@ -91,27 +87,29 @@ document.addEventListener("DOMContentLoaded", function (event) {
        
     });
 
-
-    
     var idToFind = ""; // using the same value from the find operation for the modify
     // find one to modify
     document.getElementById("find").addEventListener("click", function () {
         var tAssignmentName = document.getElementById("modAssignmentName").value;
          idToFind = "";
         for(i=0; i< ClientNotes.length; i++){
-            if(ClientNotes[i].assignmentName === assignmentName) {
+            if(ClientNotes[i].assignmentName === tAssignmentName) {
                 idToFind = ClientNotes[i]._id;
            }
         }
-        console.log(idToFind);
+        // console.log(idToFind);
  
         $.get("/FindHW/"+ idToFind, function(data, status){ 
-            console.log(data[0].title);
-            document.getElementById("className").value = data[0].className;
-            document.getElementById("assignmentName").value= data[0].assignmentName;
-            document.getElementById("submitted").value = data[0].submitted;
-            document.getElementById("score").value = data[0].score;
+            document.getElementById("mclassName").value = data[0].className;
+            document.getElementById("massignmentName").value= data[0].assignmentName;
+            document.getElementById("msubmitted").value = data[0].submitted;
+            document.getElementById("mscore").value = data[0].score;
+        }).fail(function() {
+            console.log("FindHW Failed");
+            showFoundErrorMessage(tAssignmentName);
+            document.getElementById("modAssignmentName").value = "";
         });
+        
     });
 
     // get the server data into the local array
@@ -121,27 +119,25 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
 
 function updateList() {
-    console.log("Into updateList()");
-var ul = document.getElementById('listUl');
-ul.innerHTML = "";  // clears existing list so we don't duplicate old ones
+    // console.log("Into updateList()");
+    var ul = document.getElementById('listUl');
+    ul.innerHTML = "";  // clears existing list so we don't duplicate old ones
 
-//var ul = document.createElement('ul')
+    $.get("/HWs", function(data, status){  // AJAX get
+        ClientNotes = data;  // put the returned server json data into our local array
 
-$.get("/HWs", function(data, status){  // AJAX get
-    ClientNotes = data;  // put the returned server json data into our local array
+        // sort array by one property
+        ClientNotes.sort(compare);  // see compare method below
+        ClientNotes.forEach(ProcessOneHW); // build one li for each item in array
+        function ProcessOneHW(item, index) {
+            var li = document.createElement('li');
+            ul.appendChild(li);
 
-    // sort array by one property
-    ClientNotes.sort(compare);  // see compare method below
-    console.log("Into updateList - Get /HWs: ", data);
-    //listDiv.appendChild(ul);
-    ClientNotes.forEach(ProcessOneHW); // build one li for each item in array
-    function ProcessOneHW(item, index) {
-        var li = document.createElement('li');
-        ul.appendChild(li);
-
-        li.innerHTML=li.innerHTML + index + ": " + " ClassName: " + item.className + " AssignmentName: " + item.assignmentName + " Submitted: " + item.submitted + " Score:  " + item.score;
-    }
-});
+            li.innerHTML=li.innerHTML + index + ": " + " Class: " + 
+                item.className + " Assignment: " + item.assignmentName + 
+                " Submitted: " + item.submitted + " Score:  " + item.score;
+        }
+    });
 }
 
 function compare(a,b) {
@@ -154,18 +150,25 @@ function compare(a,b) {
     return 0;
 }
 
-$.get("/HWs", function(data, status){  // AJAX get
-    ClientNotes = data;  // put the returned server json data into our local array
+function clearAddGridComponents() {
+    document.getElementById("className").value = "";
+    document.getElementById("assignmentName").value = "";
+    document.getElementById("submitted").value = "";
+    document.getElementById("score").value = "";
+}
 
-    // sort array by one property
-    ClientNotes.sort(compare);  // see compare method below
-    console.log("Into updateList - Get /HWs: ", data);
-    //listDiv.appendChild(ul);
-    ClientNotes.forEach(ProcessOneHW); // build one li for each item in array
-    function ProcessOneHW(item, index) {
-        var li = document.createElement('li');
-        ul.appendChild(li);
+function showSuccessAddNotif() {
+    document.getElementById("addNotif").innerHTML = "Added Successfully!";
+    setTimeout(function(){
+        document.getElementById("addNotif").innerHTML = '';
+    }, 3000);
+}
 
-        li.innerHTML=li.innerHTML + index + ": " + " ClassName: " + item.className + " AssignmentName: " + item.assignmentName + " Submitted: " + item.submitted + " Score:  " + item.score;
-    }
-});
+function showFoundErrorMessage(assignName) {
+    const msg = "Assignment \'" + assignName + "\' not found.";
+    document.getElementById("findErrorMsg").innerHTML = msg;
+    setTimeout(function(){
+        document.getElementById("findErrorMsg").innerHTML = '';
+    }, 3000);
+
+}

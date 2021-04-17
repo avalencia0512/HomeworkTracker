@@ -10,29 +10,31 @@
 </head>
 
 <body>
-<h2>V2 To Do's</h2>
-<div class="grid-container">
-   
-
-
-<div  class="grid-item">
-    <h3>Existing To Dos</h3>
-    <button type="button" id=get>Show Existing</button>
+<h2>HW Assignments</h2>
+<div class="listAssignments row">
+    <h3>List of HW Assignments</h3>
+    <button type="button" hidden id=get>Show Assignments</button>
     <ul id="listUl"></ul>
 </div>
-   
-   
-   
+
+
+<div class="grid-container">
    
     <div  class="grid-item">
-        <h3>Add a new ToDo</h3>
-        <label for="title">Title:</label>
-        <input type="text" id="title" name="fname"><br><br>
-        <label for="detail">Detail:</label>
-        <input type="text" id="detail" name="fname"><br><br>
-        <label for="priority">Priority:</label>
-        <input type="text" id="priority" name="fname"><br><br>
-        <button type="button" id=submit>SUBMIT</button>
+        <h3>Add a new Assignment</h3>
+
+        <label for="className">Class Name:</label>
+        <input type="text" id="className" name="fname"><br><br>
+        <label for="assignmentName">Assignment Name:</label>
+        <input type="text" id="assignmentName" name="fname"><br><br>
+        <label for="submitted">Submitted:</label>
+        <input type="text" id="submitted" name="fname"><br><br>
+        <label for="score">Score:</label>
+        <input type="number" id="score" name="fname"><br><br>
+
+        <button type="button" id=submit>SUBMIT</button><br><br>
+
+        <label type="text" id="addNotif" name="addNotif" class="alarmMsg"></label>
        
     </div>
 
@@ -48,17 +50,25 @@
 
    
     <div  class="grid-item">
-        <h3>Edit one ToDo </h3>
+        <h3>Find an Assignment </h3>
         <div>
-            Enter Title here:  <input type="text" id="modTitle"><br><br>
-            <button type="button" id=find>FIND</button><br>
+            Enter Assignment Name:  
+            <input type="text" id="modAssignmentName"><br><br>
+            <button type="button" id=find>Find</button><br>
+
+            <label type="text" id="findErrorMsg" name="findErrorMsg" class="errorMsg"></label>
         </div>
+    </div>
+   
+
+    <div  class="grid-item">
+        
         <div>
             <h3>Edit these fields</h3>
-        <input type="text" id="mtitle" ><br><br>
-        <input type="text" id="mdetail" ><br><br>
-        <input type="text" id="mpriority" ><br><br>
-        <input type="text" id="mcompleted" ><br><br>
+        <input type="text" id="mclassName" ><br><br>
+        <input type="text" id="massignmentName" ><br><br>
+        <input type="text" id="msubmitted" ><br><br>
+        <input type="text" id="mscore" ><br><br>
         <button type="button" id=msubmit>SUBMIT</button>
         </div>
    

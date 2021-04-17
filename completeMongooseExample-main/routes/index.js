@@ -1,11 +1,12 @@
 var express = require('express');
+// const app = express();
 var router = express.Router();
 
 // mongoose is a API wrapper overtop of mongodb, just like
 // .ADO.Net is a wrapper over raw SQL server interface
 const mongoose = require("mongoose");
 
-const HWs = require("../HWs");
+const HW = require("../HW");
 
 // edited to include my non-admin, user level account and PW on mongo atlas
 // and also to include the name of the mongo DB that the collection
@@ -21,6 +22,7 @@ const options = {
   poolSize: 10
 };
 
+
 mongoose.connect(dbURI, options).then(
   () => {
     console.log("Database connection established!");
@@ -30,8 +32,6 @@ mongoose.connect(dbURI, options).then(
   }
 );
 
-
-
 /* GET home page. */
 router.get('/', function(req, res) {
   res.sendFile('index.html');
@@ -40,7 +40,7 @@ router.get('/', function(req, res) {
 /* GET all HWs */
 router.get('/HWs', function(req, res) {
   // find {  takes values, but leaving it blank gets all}
-  HWs.find({}, (err, AllHWs) => {
+  HW.find({}, (err, AllHWs) => {
     if (err) {
       console.log(err);
       res.status(500).send(err);
@@ -55,7 +55,7 @@ router.get('/HWs', function(req, res) {
 /* post a new HW and push to Mongo */
 router.post('/NewHW', function(req, res) {
 
-    let oneNewHW = new HWs(req.body);  // call constuctor in HWs code that makes a new mongo HW object
+    let oneNewHW = new HW(req.body);  // call constuctor in HWs code that makes a new mongo HW object
     console.log(req.body);
     oneNewHW.save((err, hw) => {
       if (err) {
@@ -70,7 +70,7 @@ router.post('/NewHW', function(req, res) {
 
 
 router.delete('/DeleteHW/:id', function (req, res) {
-  HWs.deleteOne({ _id: req.params.id }, (err, note) => { 
+  HW.deleteOne({ _id: req.params.id }, (err, note) => { 
     if (err) {
       res.status(404).send(err);
     }
@@ -80,9 +80,9 @@ router.delete('/DeleteHW/:id', function (req, res) {
 
 
 router.put('/UpdateHW/:id', function (req, res) {
-  HWs.findOneAndUpdate(
+  HW.findOneAndUpdate(
     { _id: req.params.id },
-    { className: req.body.className, assignmentName: req.body.assignmentName, submitted: req.body.submitted,   score: req.body.score },
+    { className: req.body.className, assignmentName: req.body.assignmentName, submitted: req.body.submitted, score: req.body.score },
    { new: true },
     (err, hw) => {
       if (err) {
@@ -96,7 +96,7 @@ router.put('/UpdateHW/:id', function (req, res) {
   /* GET one HWs */
 router.get('/FindHW/:id', function(req, res) {
   console.log(req.params.id );
-  HWs.find({ _id: req.params.id }, (err, oneHW) => {
+  HW.find({ _id: req.params.id }, (err, oneHW) => {
     if (err) {
       console.log(err);
       res.status(500).send(err);

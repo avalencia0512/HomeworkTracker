@@ -29,4 +29,6 @@ const HWSchema = new Schema({
 });
 
 // Collection name : HWAssignments
-module.exports = mongoose.model("HWs", HWSchema, "HWAssignments");
+//module.exports = mongoose.model("HWs", HWSchema, "HWAssignments");
+const hwModel = mongoose.model("HW", HWSchema, "hws");
+module.exports = hwModel; // mongoose.model("HW", HWSchema);

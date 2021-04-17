@@ -120,6 +120,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
 
 function updateList() {
+    console.log("Into updateList()");
 var ul = document.getElementById('listUl');
 ul.innerHTML = "";  // clears existing list so we don't duplicate old ones
 
@@ -130,7 +131,7 @@ $.get("/HWs", function(data, status){  // AJAX get
 
     // sort array by one property
     ClientNotes.sort(compare);  // see compare method below
-    console.log(data);
+    console.log("Into updateList - Get /HWs: ", data);
     //listDiv.appendChild(ul);
     ClientNotes.forEach(ProcessOneHW); // build one li for each item in array
     function ProcessOneHW(item, index) {
@@ -151,3 +152,19 @@ function compare(a,b) {
     }
     return 0;
 }
+
+$.get("/HWs", function(data, status){  // AJAX get
+    ClientNotes = data;  // put the returned server json data into our local array
+
+    // sort array by one property
+    ClientNotes.sort(compare);  // see compare method below
+    console.log("Into updateList - Get /HWs: ", data);
+    //listDiv.appendChild(ul);
+    ClientNotes.forEach(ProcessOneHW); // build one li for each item in array
+    function ProcessOneHW(item, index) {
+        var li = document.createElement('li');
+        ul.appendChild(li);
+
+        li.innerHTML=li.innerHTML + index + ": " + " ClassName: " + item.className + " AssignmentName: " + item.assignmentName + " Submitted: " + item.submitted + " Score:  " + item.score;
+    }
+});

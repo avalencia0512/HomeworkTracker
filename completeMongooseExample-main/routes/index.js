@@ -1,5 +1,4 @@
 var express = require('express');
-// const app = express();
 var router = express.Router();
 
 // mongoose is a API wrapper overtop of mongodb, just like
@@ -49,9 +48,6 @@ router.get('/HWs', function(req, res) {
   });
 });
 
-
-
-
 /* post a new HW and push to Mongo */
 router.post('/NewHW', function(req, res) {
 
@@ -67,7 +63,6 @@ router.post('/NewHW', function(req, res) {
       }
     });
 });
-
 
 router.delete('/DeleteHW/:id', function (req, res) {
   HW.deleteOne({ _id: req.params.id }, (err, note) => { 

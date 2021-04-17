@@ -16,3 +16,22 @@
     font-size: 16px;
     text-align: left;
   }
+
+  .alarmMsg {
+    text-align: right; 
+    color: blue;    
+  }
+
+  .errorMsg {
+    text-align: right; 
+    color: red;    
+  }
+
+  .listAssignments {
+    background-color: #60a7e0c5;
+    border: 5px solid grey;
+    padding: 10px;
+    font-size: 16px;
+    text-align: left;
+    margin-bottom: 20px;
+  }

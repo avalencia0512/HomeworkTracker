@@ -35,12 +35,13 @@ document.addEventListener("DOMContentLoaded", function (event) {
         updateList()
     });
   
+    //DELETE
     document.getElementById("delete").addEventListener("click", function () {
         
         var whichHW = document.getElementById('deleteAssignmentName').value;
         var idToDelete = "";
         for(i=0; i< ClientNotes.length; i++){
-            if(ClientNotes[i].title === whichHW) {
+            if(ClientNotes[i].assignmentName === whichHW) {
                 idToDelete = ClientNotes[i]._id;
            }
         }
@@ -49,10 +50,12 @@ document.addEventListener("DOMContentLoaded", function (event) {
         {
                      $.ajax({  
                     url: 'DeleteHW/'+ idToDelete,
-                    type: 'DELETE',  
+                    method: 'DELETE',  
                     contentType: 'application/json',  
-                    success: function (response) {  
-                        console.log(response);  
+                    success: function (result) {
+                        document.getElementById("deleteAssignmentName").value = "";
+                        showSuccessDelNotif();
+                        updateList();
                     },  
                     error: function () {  
                         console.log('Error in Operation');  
@@ -64,11 +67,12 @@ document.addEventListener("DOMContentLoaded", function (event) {
         } 
     });
 
+//PUT
     document.getElementById("msubmit").addEventListener("click", function () {
-        var tClassName = document.getElementById("className").value;
-        var tAssignmentName = document.getElementById("assignmentName").value;
-        var tSubmitted = document.getElementById("submitted").value;
-        var tScore = document.getElementById("score").value;
+        var tClassName = document.getElementById("mclassName").value;
+        var tAssignmentName = document.getElementById("massignmentName").value;
+        var tSubmitted = document.getElementById("msubmitted").value;
+        var tScore = document.getElementById("mscore").value;
         var oneHW = new HW(tClassName, tAssignmentName, tSubmitted, tScore);
         
             $.ajax({
@@ -78,6 +82,9 @@ document.addEventListener("DOMContentLoaded", function (event) {
                 data: JSON.stringify(oneHW),
                     success: function (response) {  
                         console.log(response);  
+                        showSuccessEditNotif();
+                        clearEditGridComponents();
+                        updateList();
                     },  
                     error: function () {  
                         console.log('Error in Operation');  
@@ -109,8 +116,9 @@ document.addEventListener("DOMContentLoaded", function (event) {
             showFoundErrorMessage(tAssignmentName);
             document.getElementById("modAssignmentName").value = "";
         });
-        
+ 
     });
+
 
     // get the server data into the local array
     updateList();
@@ -150,6 +158,10 @@ function compare(a,b) {
     return 0;
 }
 
+function deleteAssignmentName(){
+    document.getElementById("deleteTitle").innerHTML ="";
+}
+
 function clearAddGridComponents() {
     document.getElementById("className").value = "";
     document.getElementById("assignmentName").value = "";
@@ -157,10 +169,31 @@ function clearAddGridComponents() {
     document.getElementById("score").value = "";
 }
 
+function clearEditGridComponents() {
+    document.getElementById("mclassName").value = "";
+    document.getElementById("massignmentName").value = "";
+    document.getElementById("msubmitted").value = "";
+    document.getElementById("mscore").value = "";
+}
+
 function showSuccessAddNotif() {
     document.getElementById("addNotif").innerHTML = "Added Successfully!";
     setTimeout(function(){
         document.getElementById("addNotif").innerHTML = '';
+    }, 3000);
+}
+
+function showSuccessEditNotif() {
+    document.getElementById("msg").innerHTML = "Edited Successfully!";
+    setTimeout(function(){
+        document.getElementById("msg").innerHTML = '';
+    }, 3000);
+}
+
+function showSuccessDelNotif() {
+    document.getElementById("delNotif").innerHTML = "Deleted Successfully!";
+    setTimeout(function(){
+        document.getElementById("delNotif").innerHTML = '';
     }, 3000);
 }
 

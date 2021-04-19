@@ -6,11 +6,11 @@
 .grid-container {
     display: grid;
     grid-template-columns: auto auto ;
-    background-color: #2196F3;
+    background-color: grey;
     padding: 10px;
   }
   .grid-item {
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: whitesmoke;
     border: 1px solid rgba(0, 0, 0, 0.8);
     padding: 20px;
     font-size: 16px;
@@ -28,7 +28,7 @@
   }
 
   .listAssignments {
-    background-color: #60a7e0c5;
+    background-color: whitesmoke;
     border: 5px solid grey;
     padding: 10px;
     font-size: 16px;

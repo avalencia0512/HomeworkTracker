@@ -23,9 +23,9 @@
     <div  class="grid-item">
         <h3>Add a new Assignment</h3>
 
-        <label for="className">Class Name:</label>
+        <label for="className">Class:</label>
         <input type="text" id="className" name="fname"><br><br>
-        <label for="assignmentName">Assignment Name:</label>
+        <label for="assignmentName">Assignment:<label>
         <input type="text" id="assignmentName" name="fname"><br><br>
         <label for="submitted">Submitted:</label>
         <input type="text" id="submitted" name="fname"><br><br>
@@ -41,18 +41,20 @@
    
 
     <div  class="grid-item">
-        <h3>Delete ToDo by Title</h3>
+        <h3>Delete Assignment by Name</h3>
         <div>
-            Enter Title here:  <input type="text" id="deleteTitle"><br><br>
+            <input type="text" id="deleteAssignmentName"><br><br>
             <button type="button" id=delete>DELETE</button><br>
+            <label type="text" id="delNotif" name="delNotif" class="alarmMsg"></label>
         </div>
     </div>
 
    
+    
     <div  class="grid-item">
-        <h3>Find an Assignment </h3>
+        <h3>Find an Assignment by Name </h3>
         <div>
-            Enter Assignment Name:  
+              
             <input type="text" id="modAssignmentName"><br><br>
             <button type="button" id=find>Find</button><br>
 
@@ -64,13 +66,20 @@
     <div  class="grid-item">
         
         <div>
-            <h3>Edit these fields</h3>
+            <h3>Edit these fields</h3>  
+        <label for="mclassName">Class:</label>
         <input type="text" id="mclassName" ><br><br>
+        <label for="massignmentName">Assignment:</label>
         <input type="text" id="massignmentName" ><br><br>
+        <label for="msubmitted">Submitted:</label>
         <input type="text" id="msubmitted" ><br><br>
+        <label for="mscore">Score:</label>
         <input type="text" id="mscore" ><br><br>
         <button type="button" id=msubmit>SUBMIT</button>
         </div>
+
+        <label type="text" id="msg" name="msg" class="alarmMsg"></label>
+
    
     </div>
 </div>
